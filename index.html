@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet'>
+    <link rel='stylesheet' type='text/css' href='assets/css/style_test.css'>
+    <title>Visualizing Image Fields</title>
+    <meta name='author' content='Douglas Duhaime'>
+  </head>
+  <body>
+    <div class="header"></div>
+      <input type="checkbox" class="openSidebarMenu" id="openSidebarMenu">
+      <label for="openSidebarMenu" class="sidebarIconToggle">
+        <div class="spinner diagonal part-1"></div>
+        <div class="spinner horizontal"></div>
+        <div class="spinner diagonal part-2"></div>
+      </label>
+      <div id="sidebarMenu">
+        <ul class="sidebarMenuInnerTop">
+            <li>US Cellular Breakthrough Map <div id = "brandname"> </div> <div id = "clustername"> </div> <div id = "brandpercentage"> </div></li>
+        </ul>
+        <ul class="sidebarMenuInnerPic">
+            <li><img id="popupImage" src=" " class = "center" /></li>
+        </ul>
+        <ul class="sidebarMenuInner">  
+          <li><div id="container" width = 150 height = 193></div><div id="container2" width = 150 height = 193></div></li>
+          <li><div id="container2" width = 300 height = 193></div></li>
+          <li><canvas id="Canvas" src="assets/images/USCC Full Map.png" class = "centerMap" width = 300 height = 193></canvas></li>
+          <li><img id="fullMap" src="assets/images/USCC Full Map.png" class = "centerVoid" width = 0 height = 0/></li>
+          <li><form name="test">
+                <input type="checkbox" name="checkgroup" checked />
+                <input type="checkbox" name="checkgroup" />
+                <input type="checkbox" name="checkgroup" checked />
+              </form></li>
+        </ul>
+      </div>
+    <div class='loader-scene'>
+      <p class='welcome'>This page visualizes a large image collection within an interactive WebGL scene. Each image was processed with an <a href='https://www.cs.unc.edu/~wliu/papers/GoogLeNet.pdf' target='_blank'>Inception</a> Convolutional Neural Network, trained on <a href='http://image-net.org/challenges/LSVRC/2012/' target='_blank'>ImageNet 2012</a>, and projected into a two-dimensional manifold with the <a href='https://github.com/lmcinnes/umap' target='_blank'>UMAP</a> algorithm such that similar images appear proximate to one another.</p>
+      <div class='loader-container'>
+        <div class='loader-icon'>
+          <div class='blocks'>
+            <div class='block'></div>
+            <div class='block'></div>
+            <div class='block'></div>
+            <div class='block'></div>
+            <div class='block'></div>
+            <div class='block'></div>
+            <div class='block'></div>
+            <div class='block'></div>
+            <div class='block'></div>
+          </div>
+        </div>
+        <div id='progress'>0%</div>
+      </div>
+      <button id='enter'>Enter</button>
+    </div>
+    <nav>
+      <div class='nav-inner'>
+        <h2>Hotspots</h2>
+        <div id='hotspots'></div>
+        <script type='text/html' id='template'>
+          <% _.forEach(hotspots, function(hotspot) { %>
+            <div class='hotspot'>
+              <div class='background-image'
+                style='background-image: url("thumbs/128px/<%= hotspot.img %>")'></div>
+              <div><%= hotspot.label %></div>
+            </div>
+          <% }); %>
+        </script>
+      </div>
+    </nav>
+      
+    <div id="myModal" class="modal">
+    </div>
+
+ <!--   <div class="header"></div>    -->
+ 
+    <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js'></script>
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js'></script>
+    <script src="assets/js/anychart-core.min.js"></script>
+    <script src="https://static.anychart.com/js/8.0.1/anychart-pie.min.js"></script>
+    <script type='text/javascript' src='assets/js/object-assign-polyfill.js'></script>
+    <script type='text/javascript' src='assets/js/tween.js'></script>
+    <script type='text/javascript' src='assets/js/trackball-controls.js'></script>
+    <script type='text/javascript' src='assets/js/texture-loader.js'></script>
+    <script type='text/javascript' src='assets/js/tsne-webgl.js'></script>
+    <script type='text/javascript' src='assets/js/ga.js'></script>
+
+  </body>
+</html>
