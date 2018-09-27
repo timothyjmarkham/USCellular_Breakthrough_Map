@@ -26,11 +26,17 @@
           <li><div id="container2" width = 300 height = 193></div></li>
           <li><canvas id="Canvas" src="assets/images/USCC Full Map.png" class = "centerMap" width = 300 height = 193></canvas></li>
           <li><img id="fullMap" src="assets/images/USCC Full Map.png" class = "centerVoid" width = 0 height = 0/></li>
-          <li><form name="test">
-                <input type="checkbox" name="checkgroup" checked />
-                <input type="checkbox" name="checkgroup" />
-                <input type="checkbox" name="checkgroup" checked />
-              </form></li>
+          <li>
+                 <input type="checkbox" name="brands" value = "USCC" checked id="USCC" style="display:inline-block"><label for="brands"> USCC</label> <br>
+                  <input type="checkbox" name="brands" value = "ATT" checked id="ATT" style="display:inline-block" ><label for="brands"> ATT</label> <br>
+                  <input type="checkbox" name="brands" value = "Verizon" checked id="Verizon" style="display:inline-block" ><label for="brands"> Verizon</label> <br>
+                  <input type="checkbox" name="brands" value = "Sprint" checked id="Sprint" style="display:inline-block" ><label for="brands"> Sprint</label> <br>
+                  <input type="checkbox" name="brands" value = "TMobile" checked id="TMobile" style="display:inline-block" ><label for="brands"> TMobile</label> <br>
+                  <input type="checkbox" name="brands" value = "MetroPCS" checked id="MetroPCS" style="display:inline-block" ><label for="brands"> MetroPCS</label>
+                <p>
+                    <button id = 'refresh' onclick='checkboxFunction()' style="opacity:1">Refresh Map</button>
+                </p>
+              </li>
         </ul>
       </div>
     <div class='loader-scene'>

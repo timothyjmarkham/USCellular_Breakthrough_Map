@@ -5,7 +5,7 @@
 // Initialize global data stores for image data
 var imageData = {};
 var imageDataKeys = [];
-
+selectedBrands = 'USCC|ATT|Verizon|TMobile|Sprint|MetroPCS';
 // Identify data endpoint --EDITED FROM ORIGINAL DUE TO NEW POSITION OF DATA
 // var dataUrl = '';
 
@@ -157,6 +157,18 @@ function get(url, handleSuccess) {
   xmlhttp.send();
 };
 
+function checkboxFunction() {
+    var brands=document.getElementsByName('brands');
+    selectedBrands="";
+    for(var i=0; i<brands.length; i++){
+        if(brands[i].type=='checkbox' && brands[i].checked==true)
+                    selectedBrands+=brands[i].value+"\n";
+    } 
+    console.log(selectedBrands);
+    loadData();
+    /*window.location.hash = '#Refresh';*/
+}
+
 /**
 * Load image positional data, and once it arrives parse
 * the image data, render the hotspots and conditionally
@@ -168,7 +180,6 @@ function loadData() {
     var brandData = JSON.parse(data);
     var brandCountsHolder = brandData["count"];
     brandCounts = [
-    {x: "USCell_New", value: brandCountsHolder["USCell_New"]},
     {x: "USCC", value: brandCountsHolder["USCC"]},
     {x: "Sprint", value: brandCountsHolder["Sprint"]},
     {x: "ATT", value: brandCountsHolder["ATT"]},
@@ -189,8 +200,26 @@ function loadData() {
   get('brand_percentages.json', function(data) {
     brandPercentages = JSON.parse(data);
   }) 
-  get('plot_data.json', function(data) {
-    var data = JSON.parse(data);
+  get('plot_data.json', function(data_orig) {
+    var dataHold = JSON.parse(data_orig);
+    
+    var dataPositions = [];
+    data = {};
+    for(var i=0; i<dataHold.positions.length; i++){
+        //console.log(dataHold.positions[i]);
+        if (selectedBrands.includes(dataHold.positions[i][0].substring(0, 3))) {
+            dataPositions.push(dataHold.positions[i]);
+            //console.log(dataHold.positions[i]);
+        } else{
+            dataPositions.push([dataHold.positions[i][0], dataHold.positions[i][1], dataHold.positions[i][2], 0, 0])
+        }
+
+    }
+   
+    data['positions'] = dataPositions;
+    data['centroids'] = dataHold['centroids'];
+    data['atlas_counts'] = dataHold['atlas_counts'];
+    console.log(data);
     // Set the atlas counts
     atlasCounts = data.atlas_counts;
     // Load the atlas files
@@ -486,7 +515,7 @@ function startIfReady() {
 **/
 
 function buildGeometry() {
-  var meshCount = Math.ceil( imageDataKeys.length / imagesPerMesh );
+  meshCount = Math.ceil( imageDataKeys.length / imagesPerMesh );
   for (var i=0; i<meshCount; i++) {
     var geometry = new THREE.Geometry();
     var meshImages = imageDataKeys.slice(i*imagesPerMesh, (i+1)*imagesPerMesh);
@@ -626,7 +655,7 @@ function updateFaceVertexUvs(geometry, img) {
 
 function buildMesh(geometry, materials) {
   // Combine the image geometry and material list into a mesh
-  var mesh = new THREE.Mesh(geometry, materials);
+  mesh = new THREE.Mesh(geometry, materials);
   // Store the index position of the image and the mesh
   mesh.userData.meshIndex = meshes.length;
   // Set the position of the image mesh in the x,y,z dimensions
@@ -965,7 +994,6 @@ function addWindowEventListeners() {
     $("#brandpercentage").html('% of Brand in This Cluster: ' + (brandPercentage * 100).toFixed(1) + "%"); 
                                                
     clusterCounts = [
-    {x: "USCell_New", value: thisClusterData["USCell_New"]},
     {x: "USCC", value: thisClusterData["USCC"]},
     {x: "Sprint", value: thisClusterData["Sprint"]},
     {x: "ATT", value: thisClusterData["ATT"]},
@@ -985,6 +1013,47 @@ function addWindowEventListeners() {
 }
 
 
+function addRefreshEventListener() {
+    var refresh = document.querySelector('#refresh');
+    refresh.style.opacity = 1;
+    refresh.addEventListener('click', function() {
+        
+      while (scene.children.length){
+        scene.remove(scene.children[0]);
+      }
+      meshes = [];
+      imageData = {};
+      imageDataKeys = [];
+      geometry = null;
+      /*var breakthroughCanvas = children2[1];
+      btcanvasWidth = breakthroughCanvas.width; 
+      btcanvasHeight = breakthroughCanvas.height;
+      ctxBg = breakthroughCanvas.getContext("webgl"); 
+      ctxBg.clearColor(1.0, 1.0, 0.0 , 1.0)
+      ctxBg.clear(ctxBg.COLOR_BUFFER_BIT);
+      console.log(ctxBg);
+      //children2[1].parentNode.removeChild(children2[1]); 
+      //ctxBg.clearRect(0, 0, btcanvasWidth.width, btcanvasHeight.height);  
+      var children2 = document.getElementsByTagName("canvas");
+      //document.body.removeChild(renderer.domElement);
+      var renderer = new THREE.WebGLRenderer({antialias: true});
+      // Add support for retina displays
+      renderer.setPixelRatio(window.devicePixelRatio);
+      // Specify the size of the canvas
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      // Add the canvas to the DOM
+      document.body.appendChild(renderer.domElement);
+      //renderer.clearRect(0, 0,  window.innerWidth, window.innerHeight );*/
+      
+      //removeLoader()
+      setTimeout(buildGeometry, 1100)
+      console.log('meshcount = ' + meshCount);
+      scenecount = scene.children;
+      for (var i=0; i<scenecount.length; i++) {
+        console.log('scene child ' + scenecount[i]);
+      }
+    })
+}
 
 
 /**
@@ -1050,5 +1119,6 @@ clusterChart.title("In Cluster");
 firstLoad()
 addCanvasEventListeners()
 addWindowEventListeners()
+addRefreshEventListener()
 loadData()
 
